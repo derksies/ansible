@@ -1,0 +1,25 @@
+---
+ - hosts: loadbalancer
+   remote_user: ubuntu
+   become: true
+   tasks:
+    - name: install nginx
+      apt: name=nginx state=present update_cache=yes
+
+    - name: ensure that nginx is running
+      service: name=nginx state=started enabled=yes
+
+    - name: configure nginx site
+      template: src=/etc/ansible/templates/nginx.conf.j2 dest=/etc/nginx/sites-available/demo mode=0644
+#Removes symlink between default and sites-enabled directory
+    - name: de-activate default nginx site
+      file: path=/etc/nginx/sites-enabled/default state=absent
+      notify: restart nginx
+#Creates symlink between new demo.conf file and sites-enabled directory
+    - name: activate demo nginx site
+      file: src=/etc/nginx/sites-available/demo dest=/etc/nginx/sites-enabled/demo state=link force=true
+      notify: restart nginx
+
+   handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted

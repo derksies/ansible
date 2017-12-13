@@ -1,0 +1,9 @@
+---
+  - hosts: control
+    become: true
+    remote_user: ubuntu
+    tasks:
+      - name: install tools
+        pip: name={{item}} state=present upgrade_all=yes
+        with_items:
+          - curl

@@ -1,0 +1,16 @@
+[web]
+18.220.103.240
+18.221.48.82
+18.217.32.17
+
+[database]
+18.217.213.12
+
+[loadbalancer]
+52.14.96.67
+
+[control]
+MBP ansible_connection=local
+
+[web:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
